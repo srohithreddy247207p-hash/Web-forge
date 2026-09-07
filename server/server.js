@@ -10,7 +10,12 @@ const app = express();
 
 await connectToDatabase()
 
-app.use(cors({origin: process.env.ORIGINS.split(","), credentials: true}))
+const allowedOrigins = [
+    ...(process.env.ORIGINS || "").split(","),
+    "https://web-forge-gamma.vercel.app",
+].map((origin) => origin.trim()).filter(Boolean);
+
+app.use(cors({origin: allowedOrigins, credentials: true}))
 app.use(cookieParser())
 app.use(express.json())
 
