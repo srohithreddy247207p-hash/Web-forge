@@ -1,6 +1,7 @@
 import { Project } from "../models/Project.js";
 import crypto from "crypto";
 import { generateProject } from "../services/ai.js";
+import { waitUntil } from "@vercel/functions";
 
 
 function hashContent(content){
@@ -40,9 +41,13 @@ export async function createProject(req, res){
     })
 
     // Start background generation
-    runBackgroundGeneration(project._id.toString(), prompt).catch((err)=>{
+    const generation = runBackgroundGeneration(project._id.toString(), prompt).catch((err)=>{
         console.error(`[Background AI] Fatal generation error for project ${project._id}:`, err)
     })
+
+    if (process.env.VERCEL === "1") {
+        waitUntil(generation);
+    }
 
     res.status(201).json({
         _id: project._id,
