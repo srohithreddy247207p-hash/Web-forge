@@ -19,7 +19,12 @@ app.use(cors({origin: allowedOrigins, credentials: true}))
 app.use(cookieParser())
 app.use(express.json())
 
-app.get("/", (req, res)=> res.send("Server is Live!"))
+app.get("/", (_req, res)=> res.send("Server is Live!"))
+app.get("/health", (_req, res)=> res.json({
+    ok: true,
+    aiConfigured: Boolean(process.env.OPENROUTER_API_KEY?.trim()),
+    model: process.env.OPENROUTER_MODEL || "openrouter/free",
+}))
 app.use('/api/auth', authRouter)
 app.use("/api/projects", projectRouter)
 
