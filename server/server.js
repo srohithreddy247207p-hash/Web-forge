@@ -31,6 +31,10 @@ app.use((err, _req, res, _next)=>{
 
 const port = process.env.PORT || 3000;
 
-app.listen(port, ()=>{
-    console.log(`Server is running at http://localhost:${port}`)
-})
+export default app;
+
+if (process.env.VERCEL !== "1") {
+    app.listen(port, ()=>{
+        console.log(`Server is running at http://localhost:${port}`)
+    })
+}
