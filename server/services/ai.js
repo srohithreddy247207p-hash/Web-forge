@@ -10,10 +10,16 @@ import { validateAndFixCode, validateRevisionContent } from './codeValidator.js'
 // --- OpenRouter Model Client Setup ---
 const MODEL = process.env.OPENROUTER_MODEL || "openrouter/free";
 const MAX_CONCURRENCY = parseInt(process.env.AI_MAX_CONCURRENCY || "6", 10)
+const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY?.trim();
+
+console.log(`[AI] OpenRouter API key configured: ${Boolean(OPENROUTER_API_KEY)}`);
 
 const openrouter = createOpenAI({
     baseURL: "https://openrouter.ai/api/v1",
-    apiKey: process.env.OPENROUTER_API_KEY,
+    apiKey: OPENROUTER_API_KEY,
+    headers: {
+        Authorization: `Bearer ${OPENROUTER_API_KEY || ""}`,
+    },
 })
 
 const model = openrouter(MODEL);
